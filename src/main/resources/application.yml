@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: erp
+  profiles:
+    # Zero-setup local run by default. Switch to `local` once PostgreSQL is installed.
+    default: local-h2
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.format_sql: true
+      # Let Hibernate create the per-context schemas (identity, sales) - section 5.
+      hibernate.hbm2ddl.create_namespaces: true
+  threads:
+    virtual:
+      enabled: true
+  http:
+    # Global defaults for every declarative HTTP-interface client.
+    clients:
+      connect-timeout: 2s
+      read-timeout: 5s
+    # Per-integration config - the "namespaced key per integration" of section 6.
+    serviceclient:
+      payment:
+        base-url: ${PAYMENT_API_URL:http://localhost:9099}
+        connect-timeout: 2s
+        read-timeout: 5s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, modulith
+  endpoint:
+    health:
+      show-details: always

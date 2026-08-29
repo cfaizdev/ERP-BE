@@ -1,0 +1,16 @@
+# Local development against a PostgreSQL you run yourself (see RUNNING.md).
+# Run with:  ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${DB_NAME:erp}
+    username: ${DB_USER:erp}
+    password: ${DB_PASSWORD:erp}
+  jpa:
+    hibernate:
+      # Convenient for early dev; replace with Flyway migrations per schema (section 5).
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug

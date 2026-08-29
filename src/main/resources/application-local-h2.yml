@@ -1,0 +1,13 @@
+# Zero-setup local run: in-memory H2 in PostgreSQL-compatibility mode.
+# No external database required. Data is lost on restart - do not use for anything
+# you want to keep. This is the default profile; `local` targets real PostgreSQL.
+spring:
+  datasource:
+    # INIT pre-creates the per-context schemas so Hibernate's DDL has somewhere to land.
+    url: 'jdbc:h2:mem:erp;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS identity\;CREATE SCHEMA IF NOT EXISTS sales'
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true

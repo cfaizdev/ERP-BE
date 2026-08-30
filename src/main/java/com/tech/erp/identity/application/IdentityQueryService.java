@@ -2,11 +2,11 @@ package com.tech.erp.identity.application;
 
 import com.tech.erp.identity.api.IdentityApi;
 import com.tech.erp.identity.api.dto.UserView;
-import com.tech.erp.identity.domain.User;
-import com.tech.erp.identity.domain.UserRepository;
+import com.tech.erp.identity.domain.entities.User;
+import com.tech.erp.identity.domain.jpa.UserRepository;
+
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,18 +22,20 @@ public class IdentityQueryService implements IdentityApi {
     }
 
     @Override
-    public Optional<UserView> findUser(UUID userId) {
-        return users.findById(userId).map(IdentityQueryService::toView);
+    public Optional<UserView> findUser(Long userId) {
+        return users.findWithAccessById(userId).map(IdentityQueryService::toView);
     }
 
     @Override
-    public boolean hasPermission(UUID userId, String permission) {
-        return users.findById(userId).map(user -> user.hasPermission(permission)).orElse(false);
+    public boolean hasPermission(Long userId, String permissionCode) {
+        return users.findWithAccessById(userId)
+                .map(user -> user.hasPermission(permissionCode))
+                .orElse(false);
     }
 
     @Override
-    public Set<String> permissionsOf(UUID userId) {
-        return users.findById(userId).map(User::permissions).orElseGet(Set::of);
+    public Set<String> permissionsOf(Long userId) {
+        return users.findWithAccessById(userId).map(User::permissions).orElseGet(Set::of);
     }
 
     private static UserView toView(User user) {

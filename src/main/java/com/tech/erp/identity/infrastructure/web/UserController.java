@@ -6,7 +6,6 @@ import com.tech.erp.identity.application.RegisterUserCommand;
 import com.tech.erp.identity.application.RegisterUserService;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,14 +29,14 @@ class UserController {
 
     @PostMapping
     ResponseEntity<UserView> register(@Valid @RequestBody RegisterUserCommand command) {
-        UUID id = registerUser.register(command);
+        Long id = registerUser.register(command);
         return identity.findUser(id)
                 .map(view -> ResponseEntity.created(URI.create("/api/users/" + id)).body(view))
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<UserView> byId(@PathVariable UUID id) {
+    ResponseEntity<UserView> byId(@PathVariable Long id) {
         return identity.findUser(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

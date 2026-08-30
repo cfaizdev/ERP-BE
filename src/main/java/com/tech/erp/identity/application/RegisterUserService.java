@@ -1,8 +1,8 @@
 package com.tech.erp.identity.application;
 
-import com.tech.erp.identity.domain.User;
-import com.tech.erp.identity.domain.UserRepository;
-import java.util.UUID;
+import com.tech.erp.identity.domain.entities.User;
+import com.tech.erp.identity.domain.jpa.UserRepository;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ public class RegisterUserService {
     }
 
     @Transactional
-    public UUID register(RegisterUserCommand command) {
+    public Long register(RegisterUserCommand command) {
         if (users.existsByEmailValue(command.normalizedEmail())) {
             throw new EmailAlreadyUsedException(command.normalizedEmail());
         }
@@ -32,6 +32,11 @@ public class RegisterUserService {
                 passwordEncoder.encode(command.password()),
                 command.companyId(),
                 command.branchId());
-        return users.save(user).id();
+
+        // The id is database-generated, so the event can only be built once the row
+        // exists - otherwise every listener (welcome email included) sees a null id.
+        User saved = users.save(user);
+        saved.markRegistered();
+        return users.save(saved).id();
     }
 }

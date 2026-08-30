@@ -3,7 +3,7 @@ spring:
     name: erp
   profiles:
     # Zero-setup local run by default. Switch to `local` once PostgreSQL is installed.
-    default: local-h2
+    default: local
   jpa:
     open-in-view: false
     hibernate:

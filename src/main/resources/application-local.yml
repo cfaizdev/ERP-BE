@@ -3,8 +3,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/${DB_NAME:erp}
-    username: ${DB_USER:erp}
-    password: ${DB_PASSWORD:erp}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:root}
   jpa:
     hibernate:
       # Convenient for early dev; replace with Flyway migrations per schema (section 5).

@@ -1,7 +1,7 @@
-package com.tech.erp.identity.domain;
+package com.tech.erp.identity.domain.entities;
 
 /** Lifecycle state of a {@link User}. Only {@code ACTIVE} users may authenticate. */
-enum UserStatus {
+public enum UserStatus {
     ACTIVE,
     DISABLED,
     LOCKED
